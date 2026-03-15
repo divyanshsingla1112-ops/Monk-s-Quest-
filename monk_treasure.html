@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Monk's Treasure</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+background:#000;
+color:white;
+font-family:Georgia, serif;
+text-align:center;
+overflow:hidden;
+}
+
+#login{
+margin-top:200px;
+}
+
+input{
+padding:12px;
+font-size:18px;
+border-radius:6px;
+border:none;
+}
+
+button{
+padding:12px 25px;
+font-size:18px;
+margin-left:10px;
+background:gold;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+#treasure{
+display:none;
+}
+
+h1{
+margin-top:80px;
+font-size:50px;
+color:gold;
+text-shadow:0 0 20px gold;
+}
+
+.quote{
+font-size:26px;
+width:70%;
+margin:auto;
+margin-top:40px;
+line-height:1.6;
+background:#f5e6c8;
+color:black;
+padding:30px;
+border-radius:15px;
+box-shadow:0 0 30px gold;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+}
+
+#certificateCanvas{
+display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div id="login">
+<h2>🔐 Enter the Monk Passkey</h2>
+<input type="text" id="pass" placeholder="Enter passkey">
+<button onclick="checkPass()">Unlock</button>
+</div>
+
+<div id="treasure">
+
+<canvas id="fireworks"></canvas>
+
+<h1>🏆 The Monk's Treasure</h1>
+
+<div class="quote">
+“Arise, awake and stop not till the goal is reached.”
+<br><br>
+The real treasure is not gold or jewels.
+It is <b>strength, courage, and belief in yourself.</b>
+<br><br>
+— Swami Vivekananda
+</div>
+
+<br>
+
+<button onclick="downloadCertificate()">Download Certificate</button>
+
+<audio id="music" loop>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5c9c4f7c43.mp3">
+</audio>
+
+</div>
+
+<canvas id="certificateCanvas" width="1200" height="800"></canvas>
+
+<script>
+
+function checkPass(){
+
+let pass=document.getElementById("pass").value;
+
+if(pass.toLowerCase()=="awaken"){
+
+document.getElementById("login").style.display="none";
+document.getElementById("treasure").style.display="block";
+
+document.getElementById("music").play();
+
+startFireworks();
+
+}
+
+else{
+
+alert("Wrong passkey. The monk still waits.");
+
+}
+
+}
+
+var canvas=document.getElementById("fireworks");
+var ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+function random(min,max){
+return Math.random()*(max-min)+min;
+}
+
+function Firework(){
+this.x=random(0,canvas.width);
+this.y=random(0,canvas.height/2);
+this.size=random(2,5);
+this.color="hsl("+random(0,360)+",100%,50%)";
+}
+
+Firework.prototype.draw=function(){
+ctx.beginPath();
+ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+ctx.fillStyle=this.color;
+ctx.fill();
+}
+
+function startFireworks(){
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+for(let i=0;i<50;i++){
+let f=new Firework();
+f.draw();
+}
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+}
+
+function downloadCertificate(){
+
+let canvas=document.getElementById("certificateCanvas");
+let ctx=canvas.getContext("2d");
+
+ctx.fillStyle="#f5e6c8";
+ctx.fillRect(0,0,1200,800);
+
+ctx.fillStyle="black";
+ctx.textAlign="center";
+
+ctx.font="60px Georgia";
+ctx.fillText("Monk Quest Certificate",600,200);
+
+ctx.font="40px Georgia";
+ctx.fillText("Awarded for completing the Monk's Quest",600,350);
+
+ctx.font="36px Georgia";
+ctx.fillText("Arise, Awake and Stop Not Till The Goal Is Reached",600,450);
+
+ctx.font="30px Georgia";
+ctx.fillText("Inspired by Swami Vivekananda",600,550);
+
+ctx.font="28px Georgia";
+ctx.fillText("🏆 Seeker of Wisdom",600,650);
+
+let link=document.createElement("a");
+link.download="Monk_Quest_Certificate.png";
+link.href=canvas.toDataURL();
+link.click();
+
+}
+
+</script>
+
+</body>
+</html>
